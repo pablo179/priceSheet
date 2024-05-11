@@ -95,6 +95,7 @@ watchEffect(() => {
               open-on-focus
               :data="previousConcepts"
               @select="
+                //@ts-ignore
                 (option) => {
                   props.row.concept = option?.value
                   props.row.price = option?.price
