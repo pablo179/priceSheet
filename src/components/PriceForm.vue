@@ -10,16 +10,7 @@ const clearDate = () => {
   pdf.value.date = null
 }
 
-const previousConcepts = [
-  {
-    value: 'Simmons',
-    price: 100
-  },
-  {
-    value: 'Jacobs',
-    price: 200
-  }
-]
+const previousConcepts: any[] = []
 
 const addProduct = () => {
   pdf.value.products.push({ quantity: 1, concept: '', spec: '', price: 0 })
@@ -95,6 +86,7 @@ watchEffect(() => {
               open-on-focus
               :data="previousConcepts"
               @select="
+                //@ts-ignore
                 (option) => {
                   props.row.concept = option?.value
                   props.row.price = option?.price
