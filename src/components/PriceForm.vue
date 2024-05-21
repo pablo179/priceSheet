@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { computed, watchEffect } from 'vue'
 import { usePdfStore } from '../stores/pdfStore'
+import { useFormStore } from '../stores/formStore'
 import { storeToRefs } from 'pinia'
 
 const store = usePdfStore()
+const formStore = useFormStore()
+
 const { pdf } = storeToRefs(store)
 
 const clearDate = () => {
@@ -31,6 +34,12 @@ const iva = computed(() => {
 const total = computed(() => {
   return Math.round(subTotal.value * 1.16)
 })
+
+const handleSaveProduct = async () => {
+  const product = pdf.value.products[0].concept
+  const price = pdf.value.products[0].price
+  await formStore.addProduct(product, price)
+}
 
 watchEffect(() => {
   pdf.value.subTotal = pdf.value.products.reduce((acc, row) => acc + row.quantity * row.price, 0)
@@ -141,6 +150,9 @@ watchEffect(() => {
       <div class="has-text-centered">
         <button type="submit" @click.prevent="store.togglePreviewModal" class="button is-primary">
           Vista Previa
+        </button>
+        <button type="submit" @click.prevent="handleSaveProduct" class="button is-primary">
+          Guardar
         </button>
       </div>
     </form>

@@ -4,6 +4,17 @@ import { formatMoney, formatDate } from '../utils'
 import { usePdfStore } from '../stores/pdfStore'
 
 const {
+  VITE_APP_ADDRESS,
+  VITE_APP_PHONE,
+  VITE_APP_PHONE_2,
+  VITE_APP_DATE_PREFIX,
+  VITE_APP_CLABE,
+  VITE_APP_BANK,
+  VITE_APP_SIGNATURE,
+  VITE_APP_SIGNATURE_2
+  //@ts-ignore
+} = import.meta.env
+const {
   pdf: { date, requester, products, subTotal, total, iva }
 } = usePdfStore()
 </script>
@@ -17,18 +28,16 @@ const {
         <span class="last-word--logo">Castillo</span>
       </h1>
       <div class="info">
-        <span class="address">
-          Av. 21 De Marzo #1002 Col. Insurgentes Tulancingo De Bravo Hidalgo
-        </span>
-        <span class="tel"> Oficina (775) 7553920 </span>
-        <span class="tel"> Personal (775) 1449627</span>
+        <span class="address"> {{ VITE_APP_ADDRESS }} </span>
+        <span class="tel"> {{ VITE_APP_PHONE }}</span>
+        <span class="tel"> {{ VITE_APP_PHONE_2 }} </span>
       </div>
       <div class="vertical-box between">
         <div>
           <div class="custom-subtitle">Solicitante:</div>
           <p class="atn">{{ requester }}</p>
         </div>
-        <div class="date">Tulancingo de Bravo, Hidalgo a {{ date && formatDate(date) }}</div>
+        <div class="date">{{ VITE_APP_DATE_PREFIX }} a {{ date && formatDate(date) }}</div>
       </div>
       <div class="table-bg">
         <table class="products-table">
@@ -85,13 +94,13 @@ const {
         </p>
         <div class="custom-subtitle">Formas de Pago:</div>
         <p>
-          Efectivo, transferencia electrónica, depósito bancario. Clabe: 036312500208468143 Banco
-          Inbursa a nombre de Edgar Daniel Castillo Morales
+          Efectivo, transferencia electrónica, depósito bancario. Clabe: {{ VITE_APP_CLABE }} Banco
+          {{ VITE_APP_BANK }}
         </p>
       </div>
       <div class="signature">
-        <span>Decoraciones Castillo agradece su preferencia</span>
-        <span>Ing. Edgar Daniel Castillo Morales</span>
+        <span> {{ VITE_APP_SIGNATURE }} </span>
+        <span> {{ VITE_APP_SIGNATURE_2 }} </span>
       </div>
     </div>
   </div>
