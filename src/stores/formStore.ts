@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { writeProduct } from '@/firebase'
+//import { writeProduct } from '@/firebase'
 
 export const useFormStore = defineStore({
   id: 'form',
