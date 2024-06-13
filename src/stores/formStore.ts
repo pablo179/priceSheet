@@ -8,7 +8,7 @@ export const useFormStore = defineStore({
   }),
   actions: {
     async addProduct(name: string, price: number) {
-      await writeProduct(name, price)
+      // await writeProduct(name, price)
     }
   }
 })
