@@ -10,12 +10,3 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_APP_FIREBASE_APP_ID
 }
 initializeApp(firebaseConfig)
-
-const db = getDatabase()
-
-export const writeProduct = async (name: string, price: number) => {
-  const res = await set(ref(db, 'products/' + name), {
-    price
-  })
-  console.log(res)
-}
