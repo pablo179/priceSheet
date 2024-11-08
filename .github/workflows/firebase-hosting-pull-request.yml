@@ -29,7 +29,6 @@ jobs:
           VITE_APP_BANK: ${{ secrets.VITE_APP_BANK }}
           VITE_APP_SIGNATURE: ${{ secrets.VITE_APP_SIGNATURE }}
           VITE_APP_SIGNATURE_2: ${{ secrets.VITE_APP_SIGNATURE_2 }}
-
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}

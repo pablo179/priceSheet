@@ -84,6 +84,7 @@ const {
           </tfoot>
         </table>
       </div>
+      <div class="html2pdf__page-break"></div>
       <div class="terms">
         <div class="custom-subtitle">Terminos y Condiciones</div>
         <p>
@@ -109,7 +110,7 @@ const {
 <style lang="scss" scoped>
 #pdf-container {
   width: 814px;
-  height: 1054px;
+  height: 1054px * 2;
   position: relative;
   padding: 40px 0px;
 
@@ -283,6 +284,7 @@ const {
     }
 
     .terms {
+      margin-top: 50px;
       p {
         margin: 0 60px;
       }
