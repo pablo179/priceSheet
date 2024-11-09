@@ -2,6 +2,7 @@
 import backImage from '../assets/back2.jpg'
 import { formatMoney, formatDate } from '../utils'
 import { usePdfStore } from '../stores/pdfStore'
+import { ref, onMounted, nextTick } from 'vue'
 
 const {
   VITE_APP_ADDRESS,
@@ -17,11 +18,66 @@ const {
 const {
   pdf: { date, requester, products, subTotal, total, iva }
 } = usePdfStore()
-</script>
 
+const PAGE_SIZE = 1054
+const containerHeight = ref(PAGE_SIZE)
+const pdfContainer = ref<HTMLElement | null>(null)
+
+const getOffsetTopRelativeToContainer = (element: HTMLElement, container: HTMLElement) => {
+  let offsetTop = 0
+  let currentElement = element
+
+  // Loop through offset parents up to the container
+  while (currentElement && currentElement !== container) {
+    offsetTop += currentElement.offsetTop
+    currentElement = currentElement.offsetParent as HTMLElement
+  }
+
+  return offsetTop
+}
+const paddingElement = () => {
+  const paddingElement = document.createElement('div')
+  paddingElement.style.width = '100%'
+  paddingElement.style.height = '50px'
+  return paddingElement
+}
+const addPageBreaks = (container: HTMLElement) => {
+  let breaks = Math.floor(container.scrollHeight / PAGE_SIZE)
+  if (breaks <= 0) return
+
+  const BREAK_IN = PAGE_SIZE * breaks - 80
+  const breakElement = document.createElement('div')
+  breakElement.classList.add('html2pdf__page-break')
+
+  const childrens = Array.from(container.querySelectorAll('*')) as HTMLElement[]
+
+  for (const child of childrens) {
+    if (getOffsetTopRelativeToContainer(child, container) >= BREAK_IN) {
+      const target = child.closest('td') ? child.closest('tr') : child
+      target?.before(breakElement.cloneNode(), paddingElement())
+      if (--breaks <= 0) break
+    }
+  }
+}
+
+const adjustContainerHeight = () => {
+  if (!pdfContainer.value) return
+  addPageBreaks(pdfContainer.value)
+  const isOverflowing = pdfContainer.value.scrollHeight > pdfContainer.value.clientHeight
+  if (isOverflowing) containerHeight.value += PAGE_SIZE
+}
+
+onMounted(() => {
+  adjustContainerHeight()
+  window.addEventListener('resize', () => nextTick(adjustContainerHeight))
+})
+</script>
 <template>
-  <div id="pdf-container">
-    <img :src="backImage" alt="back" class="img-back" />
+  <div
+    id="pdf-container"
+    ref="pdfContainer"
+    :style="{ backgroundImage: `url(${backImage})`, height: `${containerHeight}px` }"
+  >
     <div class="flex-box">
       <h1 class="logo">
         <span class="first-word--logo">Decoraciones</span>
@@ -84,7 +140,6 @@ const {
           </tfoot>
         </table>
       </div>
-      <div class="html2pdf__page-break"></div>
       <div class="terms">
         <div class="custom-subtitle">Terminos y Condiciones</div>
         <p>
@@ -110,10 +165,11 @@ const {
 <style lang="scss" scoped>
 #pdf-container {
   width: 814px;
-  height: 1054px * 2;
   position: relative;
   padding: 40px 0px;
-
+  background-size: 100% 1054px;
+  background-repeat: repeat-y;
+  background-position: top left;
   .img-back {
     position: absolute;
     top: 0;
@@ -137,12 +193,12 @@ const {
       margin-left: 60px;
 
       .first-word--logo {
-        font-size: 30px;
+        font-size: 32px;
         font-weight: 600;
       }
 
       .last-word--logo {
-        font-size: 36px;
+        font-size: 40px;
         font-weight: 700;
         font-family: 'Montserrat', sans-serif;
       }
@@ -158,7 +214,7 @@ const {
       width: 50%;
 
       span {
-        font-size: 12px;
+        font-size: 16px;
       }
     }
 
@@ -169,7 +225,7 @@ const {
     }
 
     .custom-subtitle {
-      font-size: 20px;
+      font-size: 24px;
       font-weight: 600;
       margin-left: 60px;
     }
@@ -226,13 +282,13 @@ const {
 
               &.concept {
                 > div {
-                  font-size: 14px;
+                  font-size: 18px;
                   font-weight: 500;
                   white-space: pre-wrap;
                 }
 
                 .spec {
-                  font-size: 12px;
+                  font-size: 16px;
                   text-align: end;
                   padding: 5px 9px;
                 }
@@ -241,7 +297,7 @@ const {
               &.price,
               &.total {
                 text-align: center;
-                font-size: 12px;
+                font-size: 16px;
                 font-weight: 500;
               }
             }
@@ -260,12 +316,12 @@ const {
                 text-align: center;
 
                 &.overallTotal {
-                  font-size: 16px;
+                  font-size: 20px;
                   font-weight: 600;
 
                   span {
                     font-weight: 400;
-                    font-size: 16px;
+                    font-size: 20px;
                     margin-right: 20px;
                   }
                 }

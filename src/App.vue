@@ -10,11 +10,12 @@ const store = usePdfStore()
 const { showPreviewModal, pdf } = storeToRefs(store)
 
 const exportPdf = () => {
-  html2pdf(document.getElementById('pdf-container'), {
+  const mainContainer = document.getElementById('pdf-container')
+  html2pdf(mainContainer, {
     margin: 0,
     filename: `presupuesto-${pdf.value.requester}-${new Date().toISOString()}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true },
+    html2canvas: { scale: 2 },
     jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
   })
 }
