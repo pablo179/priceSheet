@@ -1,0 +1,31 @@
+#this will have a manual trigger to deploy the app to production
+name: Manual Deploy to Production
+on:
+  workflow_dispatch:
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm i && npm run build
+        env:
+          VITE_APP_FIREBASE_API_KEY: ${{ secrets.VITE_APP_FIREBASE_API_KEY }}
+          VITE_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_APP_FIREBASE_AUTH_DOMAIN }}
+          VITE_APP_FIREBASE_PROJECT_ID: ${{ secrets.VITE_APP_FIREBASE_PROJECT_ID }}
+          VITE_APP_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_APP_FIREBASE_STORAGE_BUCKET }}
+          VITE_APP_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_APP_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_APP_FIREBASE_APP_ID: ${{ secrets.VITE_APP_FIREBASE_APP_ID }}
+          VITE_APP_ADDRESS: ${{ secrets.VITE_APP_ADDRESS }}
+          VITE_APP_PHONE: ${{ secrets.VITE_APP_PHONE }}
+          VITE_APP_PHONE_2: ${{ secrets.VITE_APP_PHONE_2 }}
+          VITE_APP_DATE_PREFIX: ${{ secrets.VITE_APP_DATE_PREFIX }}
+          VITE_APP_CLABE: ${{ secrets.VITE_APP_CLABE }}
+          VITE_APP_BANK: ${{ secrets.VITE_APP_BANK }}
+          VITE_APP_SIGNATURE: ${{ secrets.VITE_APP_SIGNATURE }}
+          VITE_APP_SIGNATURE_2: ${{ secrets.VITE_APP_SIGNATURE_2 }}
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PRICESHEET_A3BD2 }}
+          channelId: live
+          projectId: pricesheet-a3bd2
